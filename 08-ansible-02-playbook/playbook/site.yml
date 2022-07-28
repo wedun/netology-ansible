@@ -1,0 +1,64 @@
+---
+    - name: Install Clickhouse
+      hosts: clickhouse
+      handlers:
+        - name: Start clickhouse service
+          become: true
+          ansible.builtin.service:
+            name: clickhouse-server
+            state: restarted
+      tasks:
+        - block:
+            - name: Get clickhouse distrib
+              ansible.builtin.get_url:
+                url: "https://packages.clickhouse.com/rpm/stable/{{ item }}-{{ clickhouse_version }}.noarch.rpm"
+                dest: "./{{ item }}-{{ clickhouse_version }}.rpm"
+              with_items: "{{ clickhouse_packages }}"
+          rescue:
+            - name: Get clickhouse distrib
+              ansible.builtin.get_url:
+                url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
+                dest: "./clickhouse-common-static-{{ clickhouse_version }}.rpm"
+        - name: Install clickhouse packages
+          become: true
+          ansible.builtin.yum:
+            name:
+              - clickhouse-client-{{ clickhouse_version }}.rpm
+              - clickhouse-server-{{ clickhouse_version }}.rpm
+              - clickhouse-common-static-{{ clickhouse_version }}.rpm
+          notify: Start clickhouse service
+        - name: Create database
+          ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
+          register: create_db
+          failed_when: create_db.rc != 0 and create_db.rc !=82
+          changed_when: create_db.rc == 0
+    - name: Install Vector
+      tags: vector
+      hosts: clickhouse
+      handlers:
+        - name: Start Vector
+          become: true
+          ansible.builtin.systemd:
+            name: vector
+            state: restarted
+            daemon_reload: true
+            enabled: true
+      tasks:
+        - name: Get Vector distrib
+          ansible.builtin.get_url:
+            url: "https://packages.timber.io/vector/{{ vector_version }}/vector-1.x86_64.rpm"
+            dest: "./vector-1.x86_64.rpm"
+            mode: 0664
+        - name: Install Vector
+          become: true
+          ansible.builtin.yum:
+            name:
+              - vector-1.x86_64.rpm
+          notify: Start Vector
+          changed_when: true
+        - name: Vector config template
+          become: true
+          ansible.builtin.template:
+            src: ./templates/vector.j2
+            dest: /etc/vector/vector.toml
+            mode: 0644

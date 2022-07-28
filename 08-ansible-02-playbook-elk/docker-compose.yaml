@@ -1,0 +1,11 @@
+version: "3.6"
+
+services:
+  elastic08-02-01:
+    image: centos:7
+    container_name: elastic08-02-01
+    command: tail -F /var/log/messages
+  kibana08-02-01:
+    image: centos:7
+    container_name: kibana08-02-01
+    command: tail -F /var/log/syslog
