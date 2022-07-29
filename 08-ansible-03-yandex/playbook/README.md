@@ -33,6 +33,6 @@ Play "Install lighthouse" применяется на группу хостов 
 * Apply nginx config for Lighthouse - Применяем конфиг Nginx
 
 Template  
-Шаблон vector.yml.j2 используется для настройки конфига vector.
-Шаблон nginx.conf.j2 используется для первичной настройки nginx.
-Шаблон lighthouse_nginx.conf.j2 настраивает nginx на работу с lighthouse.
+Шаблон vector.yml.j2 используется для настройки конфига vector.  
+Шаблон nginx.conf.j2 используется для первичной настройки nginx.  
+Шаблон lighthouse_nginx.conf.j2 настраивает nginx на работу с lighthouse.  
