@@ -1,0 +1,13 @@
+version: "3.6"
+
+services:
+  clickhouse08-02-01:
+    image: centos:7
+    ports:
+      - 9000:9000
+    container_name: clickhouse08-02-01
+    command: tail -F /var/log/messages
+  vector08-02-01:
+    image: ubuntu
+    container_name: vector08-02-01
+    command: tail -F /var/log/syslog
