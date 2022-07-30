@@ -8,7 +8,7 @@ clickhouse:
 vector:
   hosts:
     vector-08-03-01:
-      ansible_host: 62.84.112.151
+      ansible_host: 62.84.113.87
       ansible_connection: ssh
       ansible_ssh_user: centos
 lighthouse:
