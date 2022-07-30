@@ -11,7 +11,7 @@ Playbook устанавливает Clickhouse, Vector, Lighthouse на хост
 Inventory файл  
 * "clickhouse" устанавливается на хост `clickhouse-08-03-01`
 * "vector" устанавливается на хост `vector-08-03-01`
-* "vector" устанавливается на хост `lighthouse-08-03-01`
+* "lighthouse" устанавливается на хост `lighthouse-08-03-01`
 
 Playbook  
 Play "Install Clickhouse" применяется на группу хостов "Clickhouse" и предназначен для установки и запуска Clickhouse  
