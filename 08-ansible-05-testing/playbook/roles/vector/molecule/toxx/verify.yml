@@ -1,0 +1,22 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Example assertion
+    ansible.builtin.assert:
+      that: true
+
+    - name: Include vars
+      ansible.builtin.include_vars: ../../defaults/main.yml
+
+    - name: Gather version
+      ansible.builtin.command: vector --version
+      register: vector_actual_version_content
+
+    - name: Assert running and correct version
+      ansible.builtin.fail:
+        msg: "Incorrect version or not installed: {{ vector_actual_version_content.stdout }}"
+      when: "not vector_version in vector_actual_version_content.stdout"
